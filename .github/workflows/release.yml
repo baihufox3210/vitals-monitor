@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+
+permissions:
+  contents: write
+
+jobs:
+  arch-package:
+    name: Build Arch Linux package
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    steps:
+      - name: Install build dependencies
+        run: pacman -Syu --noconfirm --needed git nodejs rust pkgconf gtk3 gtk-layer-shell
+
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build and check package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Expected a tag such as v0.1.0'; exit 1; }
+          source_version=$(sed -n 's/^version = "\([^"]*\)"/\1/p' Cargo.toml | sed -n '1p')
+          [[ "$version" == "$source_version" ]] || { echo "Tag version $version does not match Cargo.toml ($source_version)"; exit 1; }
+
+          useradd -m builder
+          mkdir -p /tmp/vitals-build /tmp/vitals-source
+          git clone --no-hardlinks "$GITHUB_WORKSPACE" /tmp/vitals-source
+          git -C /tmp/vitals-source checkout --detach "$GITHUB_SHA"
+          cp PKGBUILD vitals-monitor.install /tmp/vitals-build/
+          sed -i \
+            -e 's/^pkgname=vitals-monitor-git$/pkgname=vitals-monitor/' \
+            -e '/^provides=/d' -e '/^conflicts=/d' \
+            -e 's|git+https://github.com/baihufox3210/vitals-monitor.git|git+file:///tmp/vitals-source|' \
+            /tmp/vitals-build/PKGBUILD
+          printf '\npkgver() { printf "%%s" "%s"; }\n' "$version" >> /tmp/vitals-build/PKGBUILD
+          chown -R builder:builder /tmp/vitals-build /tmp/vitals-source
+          su builder -s /bin/bash -c 'cd /tmp/vitals-build && makepkg --noconfirm'
+          built_commit=$(git -C /tmp/vitals-build/src/vitals-monitor -c safe.directory=/tmp/vitals-build/src/vitals-monitor rev-parse HEAD)
+          [[ "$built_commit" == "$GITHUB_SHA" ]] || { echo "Built $built_commit instead of $GITHUB_SHA"; exit 1; }
+
+          shopt -s nullglob
+          packages=(/tmp/vitals-build/vitals-monitor-*.pkg.tar.zst)
+          [[ ${#packages[@]} -eq 1 ]] || { echo "Expected one package, found ${#packages[@]}"; exit 1; }
+          cp "${packages[0]}" "$GITHUB_WORKSPACE/vitals-monitor-x86_64.pkg.tar.zst"
+          cd "$GITHUB_WORKSPACE"
+          sha256sum vitals-monitor-x86_64.pkg.tar.zst > vitals-monitor-x86_64.pkg.tar.zst.sha256
+
+      - name: Publish release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            vitals-monitor-x86_64.pkg.tar.zst
+            vitals-monitor-x86_64.pkg.tar.zst.sha256

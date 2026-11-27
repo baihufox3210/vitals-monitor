@@ -1,0 +1,21 @@
+post_install() {
+  cat <<'EOF'
+Vitals Monitor installed.
+
+For your graphical session, run:
+  systemctl --user daemon-reload
+  systemctl --user enable vitals-monitor-overlay.service
+
+For DMS 2.1.2, rescan plugins and enable vitalsMonitor in DMS settings.
+Existing user-installed Vitals plugins or user units override system files;
+remove or update those copies if DMS or systemd still loads the old version.
+EOF
+}
+
+post_upgrade() {
+  cat <<'EOF'
+Reload the user service and DMS plugin to pick up the updated files:
+  systemctl --user daemon-reload
+  systemctl --user try-restart vitals-monitor-overlay.service
+EOF
+}

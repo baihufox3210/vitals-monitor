@@ -14,57 +14,55 @@
   <a href="https://www.rust-lang.org/"><img alt="Rust 2024" src="https://img.shields.io/badge/Rust-2024-000000?logo=rust&logoColor=white"></a>
   <a href="#requirements"><img alt="GTK 3" src="https://img.shields.io/badge/GTK-3-4A86CF?logo=gtk&logoColor=white"></a>
   <a href="#requirements"><img alt="Wayland layer-shell" src="https://img.shields.io/badge/Wayland-layer--shell-FFBC00?logo=wayland&logoColor=black"></a>
-  <a href="#dashboard"><img alt="DMS 2.1+" src="https://img.shields.io/badge/DMS-2.1%2B-7B61FF"></a>
+  <a href="#requirements"><img alt="DMS 2.1+" src="https://img.shields.io/badge/DMS-2.1%2B-7B61FF"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
 </p>
 
-Vitals takes its name from **vital signs**: FPS, frame time, GPU and CPU load are the numbers a game needs checked while it runs. The overlay draws them in the corner of your screen; the DMS tab lets you decide which ones matter.
-
 ## Features
 
-- **Frame pacing first** — native and output FPS, 30-second frame-time graph, P50/P95/peak frame time, and frame stability, read incrementally from NGX frame-timing logs.
-- **Hardware vitals** — GPU utilization, temperature, clock and power; VRAM usage and clock; CPU usage, temperature and clock; RAM and swap.
-- **Game and I/O** — game process CPU/RAM/threads/uptime, NVMe read, write and temperature, plus network throughput.
-- **Upscaling insight** — DLSS super-resolution and frame-generation cost with the effective resolution scale.
-- **Built to stay out of the way** — samples only while the HUD is visible, cheap NVML reuse, non-blocking log tailing that survives rotation and truncation.
-- **A dashboard that matches DMS** — pill navigation, minimal glass surfaces, disclosure rows with six-dot drag sorting, symmetric steppers and a focused CSS editor.
+- Monitor FPS, frame time, GPU, CPU, memory, disk and network activity.
+- Configure metrics, placement, sources and CSS in the DMS dashboard or GTK settings window.
+- Preview changes before applying them; reorder metrics by dragging their handles.
 
-## Dashboard
-
-DMS 2.1 or newer exposes **Vitals** as a Dash tab with five pages:
-
-| Page | What it controls |
-| --- | --- |
-| **Vitals** | Which metrics appear, their order and individual fields. |
-| **Placement** | Corner, columns, width and margins, plus auto-show while gaming. |
-| **Sources** | Target process and the frame-timing log path. |
-| **Style** | Custom GTK CSS, applied live in preview. |
-| **Blocklist** | Processes that should never be treated as the game. |
-
-Each metric row has its own switch on the right. Details start collapsed every time the tab opens; click a row to reveal its checkboxes. Drag the six-dot handle to reorder rows, or focus it and press <kbd>↑</kbd> / <kbd>↓</kbd>.
-
-The header switch is part of the draft. **Preview** shows the draft without saving, and **Apply** writes the settings and restarts the overlay.
+Frame metrics depend on available NGX logs or GNUMON capture data. NVIDIA metrics require NVML.
 
 ## Requirements
 
 - Linux with a Wayland compositor that supports `wlr-layer-shell` (tested on niri)
-- Rust 1.85+ (edition 2024)
-- GTK 3 and `gtk-layer-shell` development headers
+- GTK 3 and `gtk-layer-shell` (installed automatically as package dependencies on Arch)
+- A current stable Rust toolchain and GTK development headers if building from source
 - NVIDIA GPU + driver for the NVML metrics (other metrics work without it)
 - DMS 2.1+ for the dashboard tab
 
+## Install
+
+### Arch Linux (x86_64)
+
+Install the prebuilt package from the latest [GitHub Release](https://github.com/baihufox3210/vitals-monitor/releases):
+
 ```bash
-# Fedora
-sudo dnf install gtk3-devel gtk-layer-shell-devel
-
-# Arch
-sudo pacman -S gtk3 gtk-layer-shell
-
-# Ubuntu / Debian
-sudo apt install libgtk-3-dev libgtk-layer-shell-dev
+curl -fL -o vitals-monitor-x86_64.pkg.tar.zst https://github.com/baihufox3210/vitals-monitor/releases/latest/download/vitals-monitor-x86_64.pkg.tar.zst
+sudo pacman -U ./vitals-monitor-x86_64.pkg.tar.zst
 ```
 
-## Install
+Then enable the user service:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable vitals-monitor-overlay.service
+```
+
+In DMS, rescan plugins and enable **Vitals Monitor** in plugin settings. The package installs the plugin to `/etc/xdg/quickshell/dms-plugins/Vitals`, a system plugin location supported by DMS 2.1.2. A Wayland graphical session is required. The Release URL becomes available after the first Release is published. Release packages are currently unsigned; systems requiring local package signatures will reject them. Each release includes a SHA-256 checksum for detecting download corruption, but it is not a cryptographic signature.
+
+To update, download and install the latest package again, then reload systemd and restart the service if it is running: `systemctl --user daemon-reload && systemctl --user try-restart vitals-monitor-overlay.service`. Rescan or reload the plugin in DMS. This package does not update automatically with `pacman -Syu`. Remove it with `sudo pacman -R vitals-monitor`.
+
+If you previously installed manually, an existing `~/.config/dms/plugins/Vitals` or `~/.config/systemd/user/vitals-monitor-overlay.service` takes precedence over the packaged version. Back up and remove those copies after verifying you no longer need them; reload systemd and rescan DMS afterwards. Your settings in `~/.config/vitals-monitor/` are not removed by pacman.
+
+To build the development version instead, clone this repository and run `makepkg -si`. The included `PKGBUILD` is not published to the AUR.
+
+### Manual install
+
+Install Rust and the GTK development dependencies first. For example: `sudo pacman -S gtk3 gtk-layer-shell` on Arch, `sudo dnf install gtk3-devel gtk-layer-shell-devel` on Fedora, or `sudo apt install libgtk-3-dev libgtk-layer-shell-dev` on Ubuntu / Debian.
 
 ```bash
 git clone https://github.com/baihufox3210/vitals-monitor
@@ -87,19 +85,6 @@ dms ipc call dash open plugin_vitalsMonitor
 
 You can also run the GTK settings window directly with `cargo run --release`. Stop the overlay service first so two HUDs do not stack.
 
-### Icons
-
-The logo is drawn in [`assets/vitals-monitor.svg`](assets/vitals-monitor.svg). A rendered 256 px copy and a hicolor set live next to it for launchers and tray menus:
-
-```bash
-for size in 16 24 32 48 64 128 256 512; do
-  install -Dm644 "assets/icons/vitals-monitor-${size}.png" \
-    ~/.local/share/icons/hicolor/${size}x${size}/apps/vitals-monitor.png
-done
-gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor 2>/dev/null || true
-```
-
-To change the artwork, edit the SVG and render the sizes with `rsvg-convert -w <size> -h <size> assets/vitals-monitor.svg -o assets/icons/vitals-monitor-<size>.png`.
 
 ### Upgrading from FrameHUD
 
@@ -114,35 +99,7 @@ systemctl --user daemon-reload
 
 ## Configuration
 
-Settings live in `$XDG_CONFIG_HOME/vitals-monitor/settings.json`, which defaults to `~/.config/vitals-monitor/settings.json`. The dashboard is the recommended way to edit them; the file is plain JSON with a `tiles` array describing order, visibility and per-field toggles.
-
-The CLI surface is intentionally small:
-
-```bash
-vitals-monitor --read-config        # print the current settings as JSON
-vitals-monitor --sample PATH        # read recent frames from an NGX log
-vitals-monitor --hud                # run the overlay
-vitals-monitor --control <op>       # apply / preview / stop-preview
-```
-
-## How the numbers are gathered
-
-- **FPS** is shown as `native / output`. The left value comes from the last second of NGX frame times; the right prefers an existing GNUMON capture and otherwise estimates from generated frames in the NGX log. Missing data shows `--`.
-- **Frame time** covers the last 30 seconds, including average, peak and a waveform drawn from NGX `Evaluate` intervals.
-- **GPU, VRAM, CPU and RAM** use a reused NVML connection and cached CPU temperature paths, sampled once per second.
-- **Game process** and **blocklist** matching ignore case and fall back gracefully when an older binary lacks a command.
-
-## Architecture
-
-| Module | Responsibility |
-| --- | --- |
-| `config` | Metric definitions, layout and settings persistence, including legacy migration. |
-| `frames` | Incremental NGX log tailing, process tracking, rotation and truncation handling. |
-| `gnumon` | One non-blocking CLI per target that exposes a capture ring. |
-| `system` | NVML reuse and per-second system sampling. |
-| `overlay` | Layer-shell surface, charts and input regions; sampling stops while hidden. |
-| `settings` | GTK settings window for layout, CSS and sources. |
-| `dms/Vitals` | The DMS dashboard tab (QML). |
+Settings live in `$XDG_CONFIG_HOME/vitals-monitor/settings.json` (normally `~/.config/vitals-monitor/settings.json`). Use the DMS dashboard or GTK settings window to choose the target process, data sources and metrics. The default NGX log search targets Wuthering Waves; other games may require a custom source.
 
 ## Development
 
