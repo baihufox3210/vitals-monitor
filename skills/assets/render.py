@@ -4,6 +4,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
+LANCZOS = Image.Resampling.LANCZOS
+
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "assets"
 ASSETS.mkdir(exist_ok=True)
@@ -94,15 +96,15 @@ def pulse_svg() -> str:
 def write_icons() -> None:
     (ASSETS / "vitals.svg").write_text(pulse_svg(), encoding="utf-8")
     mark = pulse_mark(SCALE, True)
-    mark.resize((256, 256), Image.LANCZOS).save(ASSETS / "vitals.png")
+    mark.resize((256, 256), LANCZOS).save(ASSETS / "vitals.png")
     tile = pulse_tile(SCALE)
-    tile.resize((256, 256), Image.LANCZOS).save(ASSETS / "vitals-monitor.png")
+    tile.resize((256, 256), LANCZOS).save(ASSETS / "vitals-monitor.png")
     icon_dir = ASSETS / "icons"
     if icon_dir.exists():
         shutil.rmtree(icon_dir)
     icon_dir.mkdir()
     for size in range(16, 513, 16):
-        tile.resize((size, size), Image.LANCZOS).save(icon_dir / f"vitals-monitor-{size}.png")
+        tile.resize((size, size), LANCZOS).save(icon_dir / f"vitals-monitor-{size}.png")
 
 
 def write_hero() -> None:
