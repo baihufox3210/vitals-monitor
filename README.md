@@ -18,10 +18,6 @@
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
 </p>
 
-<p align="center">
-  <img src="assets/hero.png" alt="Vitals Monitor banner">
-</p>
-
 Vitals takes its name from **vital signs**: FPS, frame time, GPU and CPU load are the numbers a game needs checked while it runs. The overlay draws them in the corner of your screen; the DMS tab lets you decide which ones matter.
 
 ## Features

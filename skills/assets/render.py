@@ -107,36 +107,6 @@ def write_icons() -> None:
         tile.resize((size, size), LANCZOS).save(icon_dir / f"vitals-monitor-{size}.png")
 
 
-def write_hero() -> None:
-    width, height = 1600, 720
-    hero = with_glow(gradient_background(width, height))
-    card = Image.new("RGBA", (width - 260, height - 220), (0, 0, 0, 0))
-    pen = ImageDraw.Draw(card)
-    pen.rounded_rectangle(
-        (0, 0, card.width - 1, card.height - 1),
-        radius=40,
-        fill=(255, 255, 255, 20),
-        outline=(255, 255, 255, 32),
-        width=2,
-    )
-    hero.alpha_composite(card, (130, 110))
-    hero.alpha_composite(pulse_mark(300, True), (190, 230))
-
-    bars = [(0.10, 0.62), (0.32, 0.86), (0.54, 0.44), (0.76, 0.72)]
-    baseline = 470
-    for index, (x, ratio) in enumerate(bars):
-        bar_height = round(300 * ratio)
-        left = round(780 + x * 620)
-        color = (*ACCENT, 230) if index % 2 == 0 else (255, 255, 255, 210)
-        pen_bars = ImageDraw.Draw(hero)
-        pen_bars.rounded_rectangle(
-            (left, baseline - bar_height, left + 54, baseline), radius=27, fill=color
-        )
-    pen_bars = ImageDraw.Draw(hero)
-    pen_bars.rounded_rectangle((780, baseline + 26, 1400, baseline + 34), radius=4, fill=(255, 255, 255, 36))
-    hero.convert("RGB").save(ASSETS / "hero.png")
-
-
 def write_social() -> None:
     width, height = 1280, 640
     social = with_glow(gradient_background(width, height))
@@ -146,11 +116,10 @@ def write_social() -> None:
 
 def main() -> None:
     write_icons()
-    write_hero()
     write_social()
     if shutil.which("optipng"):
         subprocess.run(
-            ["optipng", "-quiet", "-o2", str(ASSETS / "hero.png"), str(ASSETS / "social-preview.png")],
+            ["optipng", "-quiet", "-o2", str(ASSETS / "social-preview.png")],
             check=False,
         )
 
