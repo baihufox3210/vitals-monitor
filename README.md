@@ -99,7 +99,7 @@ done
 gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor 2>/dev/null || true
 ```
 
-To change the artwork, edit the SVG and run `python3 scripts/render-icons.py` (uses `rsvg-convert`, or `cairosvg` if installed).
+To change the artwork, edit the SVG and render the sizes with `rsvg-convert -w <size> -h <size> assets/vitals-monitor.svg -o assets/icons/vitals-monitor-<size>.png`.
 
 ### Upgrading from FrameHUD
 
