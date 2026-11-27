@@ -89,19 +89,17 @@ You can also run the GTK settings window directly with `cargo run --release`. St
 
 ### Icons
 
-`assets/vitals-monitor.png` and the hicolor set in `assets/icons/` can be installed for launchers and tray menus:
+The logo is drawn in [`assets/vitals-monitor.svg`](assets/vitals-monitor.svg). A rendered 256 px copy and a hicolor set live next to it for launchers and tray menus:
 
 ```bash
-install -Dm644 assets/vitals-monitor.png \
-  ~/.local/share/icons/hicolor/256x256/apps/vitals-monitor.png
-for size in 16 24 32 48 64 128; do
+for size in 16 24 32 48 64 128 256 512; do
   install -Dm644 "assets/icons/vitals-monitor-${size}.png" \
     ~/.local/share/icons/hicolor/${size}x${size}/apps/vitals-monitor.png
 done
 gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor 2>/dev/null || true
 ```
 
-Regenerate every asset with `python3 skills/assets/render.py` (needs Pillow).
+To change the artwork, edit the SVG and run `python3 scripts/render-icons.py` (uses `rsvg-convert`, or `cairosvg` if installed).
 
 ### Upgrading from FrameHUD
 

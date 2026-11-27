@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#20252e"/>
+      <stop offset="1" stop-color="#0b0d11"/>
+    </linearGradient>
+    <radialGradient id="light" cx="0.5" cy="0.42" r="0.55">
+      <stop offset="0" stop-color="#52a8ff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#52a8ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="pulse" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#c9e6ff"/>
+      <stop offset="0.55" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#bfe0ff"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="256" height="256" rx="60" fill="url(#tile)"/>
+  <rect width="256" height="256" rx="60" fill="url(#light)"/>
+  <rect x="0.75" y="0.75" width="254.5" height="254.5" rx="59.25"
+        fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+
+  <path d="M52 143.5H85L102 97L128 190L148 69L168 143.5H204"
+        fill="none" stroke="url(#pulse)" stroke-width="14"
+        stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+</svg>
