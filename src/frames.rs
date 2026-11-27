@@ -73,7 +73,9 @@ fn parse_res(token: &str) -> Option<(u32, u32)> {
     Some((w, h))
 }
 
-fn parse_context(line: &str) -> Option<(Option<(u32, u32)>, Option<(u32, u32)>)> {
+type Resolution = Option<(u32, u32)>;
+
+fn parse_context(line: &str) -> Option<(Resolution, Resolution)> {
     if !line.starts_with("# context ") {
         return None;
     }

@@ -627,8 +627,8 @@ impl System {
             if cpu_clock {
                 let freqs = self.cpufreqs.get_or_insert_with(cpufreq_paths);
                 let mut max_khz = 0_u64;
-                for i in 0..freqs.len() {
-                    if let Some(khz) = numeric(&freqs[i], &mut self.buf) {
+                for path in freqs.iter() {
+                    if let Some(khz) = numeric(path, &mut self.buf) {
                         max_khz = max_khz.max(khz);
                     }
                 }
@@ -801,8 +801,8 @@ impl System {
         if want_temp {
             let nvmes = self.nvmes.get_or_insert_with(nvme_sensors);
             let mut max_temp = 0_u64;
-            for i in 0..nvmes.len() {
-                if let Some(t) = numeric(&nvmes[i], &mut self.buf) {
+            for path in nvmes.iter() {
+                if let Some(t) = numeric(path, &mut self.buf) {
                     max_temp = max_temp.max(t);
                 }
             }
