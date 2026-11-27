@@ -80,23 +80,7 @@ def pulse_tile(size: int) -> Image.Image:
     return Image.alpha_composite(tile, pulse_mark(size, True))
 
 
-def pulse_svg() -> str:
-    path = " ".join(
-        f"{'M' if index == 0 else 'L'}{x * 32:.2f} {y * 32:.2f}"
-        for index, (x, y) in enumerate(POINTS)
-    )
-    return (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">\n'
-        f'  <path d="{path}" fill="none" stroke="#ecf7ff" stroke-width="2.5" '
-        'stroke-linecap="round" stroke-linejoin="round"/>\n'
-        "</svg>\n"
-    )
-
-
 def write_icons() -> None:
-    (ASSETS / "vitals.svg").write_text(pulse_svg(), encoding="utf-8")
-    mark = pulse_mark(SCALE, True)
-    mark.resize((256, 256), LANCZOS).save(ASSETS / "vitals.png")
     tile = pulse_tile(SCALE)
     tile.resize((256, 256), LANCZOS).save(ASSETS / "vitals-monitor.png")
     icon_dir = ASSETS / "icons"
