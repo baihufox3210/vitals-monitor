@@ -1,0 +1,17 @@
+[Unit]
+Description=Vitals Monitor game overlay
+PartOf=graphical-session.target
+After=graphical-session.target
+Requisite=graphical-session.target
+
+[Service]
+Type=dbus
+BusName=io.github.vitalsmonitor.Overlay
+Environment=GDK_BACKEND=wayland
+ExecStart=%h/.local/bin/vitals-monitor --hud
+Restart=on-failure
+RestartSec=2
+TimeoutStartSec=10
+
+[Install]
+WantedBy=graphical-session.target

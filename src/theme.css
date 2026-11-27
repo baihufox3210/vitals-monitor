@@ -1,0 +1,171 @@
+.settings {
+  background-color: #f5f4f1;
+  color: #242420;
+  font-family: "Inter", "Noto Sans CJK TC", "Noto Sans", sans-serif;
+  font-size: 13px;
+}
+headerbar.window-bar { background-image: none; background-color: #f5f4f1; color: #242420; border: 0; box-shadow: none; padding: 4px 12px; }
+.settings label { color: #242420; }
+.settings .muted, .settings .tile-description, .settings .nav-heading { color: #5f5e57; }
+.settings .nav-heading { font-size: 11px; font-weight: bold; margin: 3px 10px 0; }
+.settings .sidebar { padding: 20px 12px 16px; background-color: #eeede9; border-right: 1px solid #dfded8; }
+.settings .navigation, .settings .navigation list { background-color: transparent; border: 0; }
+.settings .navigation row { padding: 10px 8px; border-radius: 7px; margin: 2px 0; }
+.settings .navigation row:hover { background-color: #e7e5e0; }
+.settings .navigation row:selected { background-color: #dedcd5; }
+.settings .navigation row:selected label { font-weight: bold; }
+.settings .page { padding: 22px 24px; }
+.settings .section-title { font-size: 26px; font-weight: bold; }
+.settings .group-title { font-size: 14px; font-weight: bold; margin-top: 6px; }
+.settings .tile-list, .settings .settings-group, .settings .master { background-color: #fffefa; border: 1px solid #e2e0da; border-radius: 9px; }
+.settings .tile-list { margin-top: 3px; }
+.settings .tile-row { padding: 4px 12px 4px 8px; min-height: 40px; border-bottom: 1px solid #eeede8; }
+.settings .tile-row:last-child { border-bottom-color: transparent; }
+.settings .tile-row:hover { background-color: #f9f8f4; }
+.settings .tile-row.drop-before { box-shadow: inset 0 2px #373630; }
+.settings .tile-row.drop-after { box-shadow: inset 0 -2px #373630; }
+.settings .tile-name, .settings .field-title { font-weight: bold; }
+.settings .tile-description { font-size: 11px; }
+.settings .settings-group, .settings .master { padding: 11px 13px; }
+.settings .grip, .settings .quiet, .settings entry, .settings spinbutton, .settings combobox button {
+  background-image: none;
+  background-color: #fffefa;
+  color: #292822;
+  border: 1px solid #dedcd4;
+  border-radius: 7px;
+  box-shadow: none;
+  text-shadow: none;
+}
+.settings .quiet { padding: 7px 11px; }
+.settings .grip { border-color: transparent; background-color: transparent; color: #79776d; padding: 5px; }
+.settings .grip:hover, .settings .grip:focus, .settings .quiet:hover { background-color: #eeede7; color: #242420; }
+.settings .grip:focus { border-color: #827e72; }
+.settings switch { background-image: none; background-color: #e2e0d8; border-color: #cecac0; color: transparent; }
+.settings switch:checked { background-color: #47463e; border-color: #47463e; }
+.settings switch slider { background-image: none; background-color: #fffefa; box-shadow: none; }
+.settings .primary {
+  background-image: none;
+  background-color: #242420;
+  border: 1px solid #242420;
+  border-radius: 7px;
+  font-weight: bold;
+  padding: 8px 15px;
+  text-shadow: none;
+}
+.settings .primary:hover { background-color: #45443c; }
+.settings .primary label { color: #fffefa; }
+.settings .footer { background-color: #f5f4f1; padding: 11px 18px; border-top: 1px solid #dfded8; }
+.settings .editor border { border-color: #dedcd4; border-radius: 7px; }
+.settings textview text { color: #292822; background-color: #fffefa; }
+.hud {
+  font-family: "DejaVu Sans Mono";
+  font-size: 13px;
+  color: #e8edf5;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+.hud-surface {
+  background: transparent;
+}
+
+.hud {
+  background: rgba(12, 17, 25, 0.7);
+  border: 1px solid #344052;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.hud .header {
+  border-bottom: 1px solid #344052;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.hud .header-title {
+  color: #62dda6;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.hud .header-status {
+  color: #91a1b4;
+  font-size: 11px;
+}
+
+.hud .metric {
+  min-height: 24px;
+}
+
+.hud .metric-name {
+  font-weight: bold;
+  min-width: 78px;
+}
+
+.hud .metric-value {
+  color: #f1f5fa;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.hud .gpu         { color: #62dda6; }
+.hud .vram        { color: #c69af4; }
+.hud .cpu         { color: #76b8ff; }
+.hud .ram         { color: #ffbe78; }
+.hud .game        { color: #f687b3; }
+.hud .disk        { color: #81e6d9; }
+.hud .net         { color: #9ae6b4; }
+.hud .frame-stats { color: #fbd38d; }
+.hud .dlss        { color: #63b3ed; }
+
+.hud .frame-history {
+  border-top: 1px solid #344052;
+  margin-top: 8px;
+  padding-top: 10px;
+}
+
+.hud .frame-title {
+  color: #91a1b4;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.hud .frame-value {
+  color: #62dda6;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.hud .frame-grid {
+  border: 1px solid rgba(98, 221, 166, 0.14);
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 16px, rgba(98, 221, 166, 0.08) 16px, rgba(98, 221, 166, 0.08) 17px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(98, 221, 166, 0.06) 39px, rgba(98, 221, 166, 0.06) 40px);
+}
+
+.hud .frame-wave {
+  color: #62dda6;
+  background-color: transparent;
+}
+
+.hud .frame-average {
+  color: rgba(98, 221, 166, 0.32);
+  background-color: transparent;
+}
+
+.hud .frame-caption, .frame-waiting {
+  color: #91a1b4;
+  font-size: 10px;
+}
+
+.hud .chart { color: #62dda6; }
+.hud .frame-value { font-size: 14px; }
+.hud .metric.gpu,
+.hud .metric.vram,
+.hud .metric.cpu,
+.hud .metric.ram,
+.hud .metric.game,
+.hud .metric.disk,
+.hud .metric.net,
+.hud .metric.frame-stats,
+.hud .metric.dlss { color: #e8edf5; }

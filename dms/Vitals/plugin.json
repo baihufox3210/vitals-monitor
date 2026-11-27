@@ -1,0 +1,14 @@
+{
+  "id": "vitalsMonitor",
+  "name": "Vitals Monitor",
+  "description": "遊戲 FPS、影格時間與硬體狀態面板設定",
+  "version": "0.1.0",
+  "author": "baihufox3210",
+  "icon": "monitoring",
+  "type": "dash",
+  "capabilities": ["dash-tab"],
+  "component": "./VitalsDashboard.qml",
+  "dash": {"title": "Vitals"},
+  "permissions": ["process"],
+  "requires_dms": ">=2.1.0"
+}
